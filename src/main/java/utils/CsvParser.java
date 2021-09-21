@@ -26,7 +26,6 @@ public class CsvParser {
     */
    @SneakyThrows
    public static List<String> parseCsv(String path) {
-      try {
          BufferedReader reader = new BufferedReader(new FileReader(path));
 
          List<String> visits = new ArrayList<>();
@@ -35,12 +34,6 @@ public class CsvParser {
          while ((visit = reader.readLine()) != null) {
                visits.add(visit);
          }
-//         log.error("Result: {}", visits);
-
          return visits;
-      } catch (Exception e) {
-         log.error("Problem occurred while parsing file: {}", path);
-         throw e;
-      }
    }
 }

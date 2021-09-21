@@ -42,6 +42,7 @@ public class VisitsPeakService {
 
    private static Map<Integer, Integer> fillInFrames(List<String> visits) {
       final int minutesADay = (int) TimeUnit.DAYS.toMinutes(1L);
+
       Map<Integer, Integer> minuteFrames = new HashMap<>();
 
       for (int i = 0; i < minutesADay; i++) {
@@ -83,7 +84,7 @@ public class VisitsPeakService {
          if (peakFrames.containsKey(frame.getKey() + 1)) {
             to++;
          } else {
-            log.info(convertToString(from) + "-" + convertToString(to) + ";" + frame.getValue());
+            log.info(convertToString(from) + "-" + convertToString(to) + ";" + frame.getValue() + "\n");
             from = 0;
          }
       }
