@@ -1,10 +1,12 @@
-import java.util.List;
-import java.util.Map;
+import service.VisitsPeakService;
 
 
 public class Application {
 
+   /**
+    * The one and only PSVM
+    */
    public static void main(String[] args) {
-     List<Map.Entry<Float, Float>> visits = CsvParser.parseCsv("src/main/resources/Visits.txt");
+     VisitsPeakService.calculatePeakActivity("src/main/resources/VisitsSimple.txt");
    }
 }
