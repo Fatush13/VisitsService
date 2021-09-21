@@ -3,10 +3,12 @@ package service;
 
 import utils.CsvParser;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -29,16 +31,16 @@ public class VisitsPeakService {
    public static void calculatePeakActivity(String path) {
       List<String> visits = CsvParser.parseCsv(path);
 
-      Map<Integer, Integer> peakFrames = findPeak(visits);
+      Map<Integer, Integer> minuteFrames = fillInFrames(visits);
 
-      log.error("PeakFrames: {}", peakFrames);
+      Map<Integer, Integer> peakFrames = maxValueEntries(minuteFrames);
 
       displayResult(peakFrames);
    }
 
    /* implementation */
 
-   private static Map<Integer, Integer> findPeak(List<String> visits) {
+   private static Map<Integer, Integer> fillInFrames(List<String> visits) {
       final int minutesADay = (int) TimeUnit.DAYS.toMinutes(1L);
       Map<Integer, Integer> minuteFrames = new HashMap<>();
 
@@ -56,23 +58,17 @@ public class VisitsPeakService {
          }
          minuteFrames.put(i, count);
       }
-      log.error("Frames: {}", minuteFrames);
-      return maxValueEntries(minuteFrames);
+      return minuteFrames;
    }
 
    private static Map<Integer, Integer> maxValueEntries(Map<Integer, Integer> initialMap) {
-      int maxValue = 0;
+      int maxValue = Collections.max(initialMap.values());
 
-      for (Entry<Integer, Integer> entry : initialMap.entrySet()) {
-         if (entry.getValue().compareTo(maxValue) > 0) {
-            maxValue = entry.getValue();
-         }
-      }
-      int finalMaxValue = maxValue;
-
-      return initialMap.entrySet().stream()
-           .filter(entry -> entry.getValue().equals(finalMaxValue))
+      Map<Integer, Integer> peakFrames = initialMap.entrySet().stream()
+           .filter(entry -> entry.getValue().equals(maxValue))
            .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+
+      return new TreeMap<>(peakFrames);
    }
 
    private static void displayResult(Map<Integer, Integer> peakFrames) {
